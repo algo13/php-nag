@@ -1,0 +1,24 @@
+{
+  "name": "algo13/php-nag",
+  "type": "project",
+  "description": "A command-line tool to nag for PHP source code",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "PhpNag\\": "src/php-nag"
+    }
+  },
+  "require": {
+    "php": ">=5.4",
+    "ext-tokenizer": "*",
+    "nikic/php-parser": "~2.0"
+  },
+  "bin": [
+    "bin/phpnag"
+  ],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1-dev"
+    }
+  }
+}

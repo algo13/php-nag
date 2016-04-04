@@ -1,0 +1,37 @@
+{
+    "algorithm": "SHA1",
+    "alias": "phpnag.phar",
+    "chmod": "0755",
+     "annotations": {
+         "ignore": [
+             "author",
+             "package",
+             "version",
+             "see"
+         ]
+     },
+    "blacklist": [
+       "vendor/nikic/php-parser/bin/php-parse",
+       "vendor/nikic/php-parser/lib/bootstrap.php",
+       "vendor/nikic/php-parser/lib/PhpParser/Lexer/Emulative.php",
+       "vendor/nikic/php-parser/lib/PhpParser/NodeVisitor/NameResolver.php",
+       "vendor/nikic/php-parser/lib/PhpParser/Serializer/XML.php",
+       "vendor/nikic/php-parser/lib/PhpParser/Unserializer/XML.php",
+       "vendor/nikic/php-parser/lib/PhpParser/Autoloader.php",
+       "vendor/nikic/php-parser/lib/PhpParser/NodeDumper.php",
+       "vendor/nikic/php-parser/lib/PhpParser/Serializer.php",
+       "vendor/nikic/php-parser/lib/PhpParser/Unserializer.php",
+       "vendor/nikic/php-parser/lib/PhpParser/NodeTraverser.php"
+    ],
+    "directories": ["src", "bin"],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": [".git", "doc", "grammar", "Tests", "Test", "test", "test_old"],
+            "in": "vendor"
+        }
+    ],
+    "main": "bin/phpnag.php",
+    "output": "phpnag.phar",
+    "stub": true
+}
