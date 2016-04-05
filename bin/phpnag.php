@@ -1,5 +1,5 @@
 <?php
-define('PHPNAG_VERSIOIN', '0.0.1-alpha1');
+define('PHPNAG_VERSIOIN', '0.0.1-alpha2');
 if (file_exists(__DIR__.'../vendor/autoload.php')) {
     require __DIR__.'../vendor/autoload.php';
 } else {
@@ -23,7 +23,8 @@ for ($i = 1; $i < $argc; ++$i) {
         ) as $fileInfo) {
             if (in_array(
                 $fileInfo->getExtension(),
-                ['php', 'phps', 'php5', 'php7', 'html', 'htm', 'phtml', 'tpl', 'cgi', 'inc']
+                ['php', 'phps', 'php5', 'php7', 'html', 'htm', 'phtml', 'tpl', 'cgi', 'inc'],
+                true
             )) {
                 $files[] = $fileInfo->getPathname();
             }
