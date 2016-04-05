@@ -451,10 +451,10 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         ) {
             $this->enterCond($cond->left, $type);
             $this->enterCond($cond->right, $type);
-        } elseif ($node instanceof Node\Expr\BinaryOp\BitwiseOr
-         || $node instanceof Node\Expr\BinaryOp\BitwiseAnd
+        } elseif ($cond instanceof Node\Expr\BinaryOp\BitwiseOr
+         || $cond instanceof Node\Expr\BinaryOp\BitwiseAnd
         ) {
-            $this->report($node, 'Cond/BITWISE_OPERATOR');
+            $this->report($cond, 'Cond/BITWISE_OPERATOR');
         } elseif ($cond instanceof Node\Expr\Assign) {
             $this->report($cond, 'Cond/ASSIGN_'.$type);
         } else {
