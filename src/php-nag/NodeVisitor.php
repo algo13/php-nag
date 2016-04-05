@@ -168,6 +168,23 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                     $this->report($node, "FuncCall/DEFINE_NAME");
                 }
                 break;
+            case 'setlocale':
+                $category = $node->args[0]->value;
+                if ($category instanceof Node\Scalar\String_) {
+                    $this->report($node, 'FuncCall/DEPRECATED_FUNC_PARAM[setlocale/$category]');
+                }
+                break;
+            case 'ini_get':
+            case 'ini_set':
+                $directive = $node->args[0]->value;
+                if ($directive instanceof Node\Scalar\String_) {
+                    $info = BuiltInUtils::getDeprecatedIni(strtolower($directive->value));
+                    if ($info !== false) {
+                        $name = strtoupper($funcName);
+                        $this->report($node, "FuncCall/DEPRECATED_{$name}[$directive->value]");
+                    }
+                }
+                break;
             case 'preg_replace':
                 static $pairs = array(
                     '(' => ')',
@@ -241,23 +258,6 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                     if (in_array($value, $flags, true)) {
                         $this->report($node, "FuncCall/DEPRECATED_FUNC_PARAM[$funcName/$value]");
                         break;
-                    }
-                }
-                break;
-            case 'setlocale':
-                $category = $node->args[0]->value;
-                if ($category instanceof Node\Scalar\String_) {
-                    $this->report($node, 'FuncCall/DEPRECATED_FUNC_PARAM[setlocale/$category]');
-                }
-                break;
-            case 'ini_get':
-            case 'ini_set':
-                $directive = $node->args[0]->value;
-                if ($directive instanceof Node\Scalar\String_) {
-                    $info = BuiltInUtils::getDeprecatedIni(strtolower($directive->value));
-                    if ($info !== false) {
-                        $name = strtoupper($funcName);
-                        $this->report($node, "FuncCall/DEPRECATED_{$name}[$directive->value]");
                     }
                 }
                 break;
@@ -352,28 +352,6 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
     {
         $this->enterCond($node->cond, $type);
     }
-    private function enterCond($cond, $type)
-    {
-        if (is_array($cond)) {
-            foreach ($cond as $conditions) {
-                $this->enterCond($conditions, $type);
-            }
-        } elseif ($cond instanceof Node\Expr\BooleanNot) {
-            $this->enterCond($cond->expr, $type);
-        } elseif (($cond instanceof Expr\inaryOp\BooleanOr)
-         || ($cond instanceof Expr\inaryOp\BooleanAnd)
-        ) {
-            $this->enterCond($cond->left, $type);
-            $this->enterCond($cond->right, $type);
-        } elseif ($cond instanceof Node\Expr\Assign) {
-            $this->report($cond, 'Cond/ASSIGN_'.$type);
-        } else {
-            $funcName = $this->getMixReturnFuncCall($cond);
-            if ($funcName !== false) {
-                $this->report($cond, "Cond/WEAK_COMP_{$type}[$funcName]");
-            }
-        }
-    }
     private function enterUnset(Node\Stmt\Unset_ $node)
     {
         static $superglobals = null;
@@ -453,6 +431,28 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 $this->report($node, "FunctionLike/DUPLICATE_FUNC_PARAM[$name]");
             } else {
                 $store[$name] = true;
+            }
+        }
+    }
+    private function enterCond($cond, $type)
+    {
+        if (is_array($cond)) {
+            foreach ($cond as $conditions) {
+                $this->enterCond($conditions, $type);
+            }
+        } elseif ($cond instanceof Node\Expr\BooleanNot) {
+            $this->enterCond($cond->expr, $type);
+        } elseif (($cond instanceof Expr\inaryOp\BooleanOr)
+         || ($cond instanceof Expr\inaryOp\BooleanAnd)
+        ) {
+            $this->enterCond($cond->left, $type);
+            $this->enterCond($cond->right, $type);
+        } elseif ($cond instanceof Node\Expr\Assign) {
+            $this->report($cond, 'Cond/ASSIGN_'.$type);
+        } else {
+            $funcName = $this->getMixReturnFuncCall($cond);
+            if ($funcName !== false) {
+                $this->report($cond, "Cond/WEAK_COMP_{$type}[$funcName]");
             }
         }
     }
