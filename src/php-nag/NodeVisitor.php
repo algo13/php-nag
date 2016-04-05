@@ -154,14 +154,18 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
     {
         if (is_string($node->name) || method_exists($node->name, '__toString')) {
             $funcName = (string)$node->name;
-        //} elseif (method_exists($node->name, 'toString')) {
-        //    $funcName = $node->name->toString();
         } else {
             return;
         }
         $funcName = strtolower($funcName);
         switch ($funcName) {
+            case 'fopen':
+            case 'srand':
+            case 'mt_srand':
+                $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
+                break;
             case 'define':
+            case 'defined':
                 $name = $node->args[0]->value;
                 //if (!($name instanceof Node\Scalar\String_)) {
                 if ($name instanceof Node\Expr\ConstFetch) {
@@ -303,7 +307,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                  && is_string($expr->var->name)
                  && array_key_exists(strtoupper($expr->var->name), $superglobals)
                 ) {
-                    $this->report($node, 'Echo/USER_INPUT[$'.$expr->name.']');
+                    $this->report($node, 'Echo/USER_INPUT[$'.$expr->var->name.']');
                 }
             }
         }
@@ -447,6 +451,10 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         ) {
             $this->enterCond($cond->left, $type);
             $this->enterCond($cond->right, $type);
+        } elseif ($node instanceof Node\Expr\BinaryOp\BitwiseOr
+         || $node instanceof Node\Expr\BinaryOp\BitwiseAnd
+        ) {
+            $this->report($node, 'Cond/BITWISE_OPERATOR');
         } elseif ($cond instanceof Node\Expr\Assign) {
             $this->report($cond, 'Cond/ASSIGN_'.$type);
         } else {
@@ -461,13 +469,9 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         if ($node instanceof Node\Expr\FuncCall) {
             if (is_string($node->name) || method_exists($node->name, '__toString')) {
                 $funcName = (string)$node->name;
-            //} elseif (method_exists($node->name, 'toString')) {
-            //    $funcName = $node->name->toString();
-            } else {
-                return false;
-            }
-            if (BuiltInUtils::isReturnMixed(strtolower($funcName))) {
-                return $funcName;
+                if (BuiltInUtils::isReturnMixed(strtolower($funcName))) {
+                    return $funcName;
+                }
             }
         }
         return false;
