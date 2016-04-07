@@ -1,5 +1,5 @@
 <?php
-define('PHPNAG_VERSIOIN', '0.0.1-alpha3-dev');
+define('PHPNAG_VERSIOIN', '0.0.1-alpha3');
 if (file_exists(__DIR__.'../vendor/autoload.php')) {
     require __DIR__.'../vendor/autoload.php';
 } else {

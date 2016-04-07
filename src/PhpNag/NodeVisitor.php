@@ -236,7 +236,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             case 'session_regenerate_id':
                 if ((count($node->args) < 1)
                  || !($node->args[0]->value instanceof Node\Expr\ConstFetch)
-                 || (strtolower($node->args[2]->value->name->toString()) !== 'true')
+                 || (strtolower($node->args[0]->value->name->toString()) !== 'true')
                 ) {
                     $this->report($node, "FuncCall/DEPRECATED_FUNC_PARAM[$funcName]");
                 }

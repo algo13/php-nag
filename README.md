@@ -2,6 +2,10 @@
 
 Static analysis tool for PHP source code by PHP.
 
+## Getting Started
+
+[Download phar](https://github.com/algo13/php-nag/releases)
+
 ## Usage
 
 ~~~sh
