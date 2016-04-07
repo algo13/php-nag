@@ -137,11 +137,11 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             ) {
                 $this->report($node, 'Equal/WEAK_COMP_NUM');
             }
-            $funcName = $this->getMixReturnFuncCall($node->left);
+            $funcName = self::getMixReturnFuncCall($node->left);
             if ($funcName !== false) {
                 $this->report($node->left, 'Equal/WEAK_COMP_FUNC['.$funcName.']');
             }
-            $funcName = $this->getMixReturnFuncCall($node->right);
+            $funcName = self::getMixReturnFuncCall($node->right);
             if ($funcName !== false) {
                 $this->report($node->right, 'Equal/WEAK_COMP_FUNC['.$funcName.']');
             }
@@ -468,13 +468,13 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         } elseif ($cond instanceof Node\Expr\Assign) {
             $this->report($cond, 'Cond/ASSIGN_'.$type);
         } else {
-            $funcName = $this->getMixReturnFuncCall($cond);
+            $funcName = self::getMixReturnFuncCall($cond);
             if ($funcName !== false) {
                 $this->report($cond, "Cond/WEAK_COMP_{$type}[$funcName]");
             }
         }
     }
-    private function getMixReturnFuncCall($node)
+    private static function getMixReturnFuncCall($node)
     {
         if ($node instanceof Node\Expr\FuncCall) {
             if (is_string($node->name) || method_exists($node->name, '__toString')) {
