@@ -135,6 +135,8 @@ php -d "memory_limit=512M" phpnag.phar file.php
     list(,);
     ~~~
 
+-   Print/USER_INPUT\[$\_GET or $\_POST ...\] :smiling_imp:
+
 -   Echo/USER_INPUT\[$\_GET or $\_POST ...\] :smiling_imp:
 
 -   ClassLike/PHP4CONSTRUCT :bomb:

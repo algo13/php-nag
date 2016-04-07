@@ -306,6 +306,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
     {
         $name = self::getUserInput($node->expr);
         if ($name !== false) {
+            $this->report($node, 'Print/USER_INPUT[$'.$name.']');
         }
     }
     private function enterEcho(Node\Stmt\Echo_ $node)
