@@ -10,6 +10,12 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
 ## Summary
 
+-   ErrorSuppress :beginner:
+
+    ~~~php
+    @file('test.txt');
+    ~~~
+
 -   AssignRef/NEW :bomb:
 
     ~~~php
@@ -57,10 +63,16 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
 -   FuncCall/NON_BEGINNER_FUNC :beginner:
 
--   FuncCall/DEFINE_NAME
+-   FuncCall/DEFINE_CONST
 
     ~~~php
     define(STRING, 'value');
+    ~~~
+
+-   FuncCall/DEFINED_CONST
+
+    ~~~php
+    defined(STRING);
     ~~~
 
 -   FuncCall/DEPRECATED_FUNC_PARAM\[`setlocale`/$category\] :bomb:
@@ -93,7 +105,7 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
     The third argument is not set.
 
--   FuncCall/DEPRECATED_FUNC_PARAM_NUM\[`htmlentities` or `htmlspecialchars`\]
+-   FuncCall/DEPRECATED_FUNC_PARAM_NUM\[`htmlentities` or `htmlspecialchars`\] :smiling_imp:
 
     The $flags argument is not set.
 
@@ -105,7 +117,7 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
     It is recommended that you use `ENT_QUOTES` flag.
 
--   FuncCall/DEPRECATED_FUNC_PARAM\[`htmlentities` or `htmlspecialchars`\]
+-   FuncCall/DEPRECATED_FUNC_PARAM\[`htmlentities` or `htmlspecialchars`\] :smiling_imp:
 
     Deprecated flag(`ENT_COMPAT`, `ENT_NOQUOTES`, `ENT_IGNORE`)
 
@@ -132,8 +144,9 @@ php -d "memory_limit=512M" phpnag.phar file.php
     ~~~php
     class Example {
         public $member1;
-        public function func(){};
+        public function func1(){};
         public $member2;
+        public function func2(){};
     }
     ~~~
 
@@ -154,9 +167,11 @@ php -d "memory_limit=512M" phpnag.phar file.php
     ~~~php
     switch ($string) {
     case 'one':
-        $value = string;
+        $value = 'string';
         //break; <= fall through
     case 'two':
+        $value = 'string string';
+        break;
     }
     ~~~
 

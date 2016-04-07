@@ -66,6 +66,8 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 $this->enterFuncCall($node);
             } elseif ($node instanceof Node\Expr\List_) {
                 $this->enterList($node);
+            } elseif ($node instanceof Node\Expr\ErrorSuppress) {
+                $this->report($node, 'ErrorSuppress');
             } elseif ($node instanceof Node\Expr\AssignRef) {
                 if ($node->expr instanceof Node\Expr\New_) {
                     $this->report($node, 'AssignRef/NEW');
@@ -169,7 +171,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 $name = $node->args[0]->value;
                 //if (!($name instanceof Node\Scalar\String_)) {
                 if ($name instanceof Node\Expr\ConstFetch) {
-                    $this->report($node, "FuncCall/DEFINE_NAME");
+                    $this->report($node, 'FuncCall/'.strtoupper($funcName).'_CONST');
                 }
                 break;
             case 'setlocale':
@@ -227,6 +229,14 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                  || (strtolower($node->args[2]->value->name->toString()) !== 'true')
                 ) {
                     $this->report($node, "FuncCall/WEAK_COMP_FUNC_PARAM[$funcName]");
+                }
+                break;
+            case 'session_regenerate_id':
+                if ((count($node->args) < 1)
+                 || !($node->args[0]->value instanceof Node\Expr\ConstFetch)
+                 || (strtolower($node->args[2]->value->name->toString()) !== 'true')
+                ) {
+                    $this->report($node, "FuncCall/DEPRECATED_FUNC_PARAM[$funcName]");
                 }
                 break;
             case 'htmlentities':
