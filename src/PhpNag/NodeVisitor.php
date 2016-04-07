@@ -68,6 +68,8 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 $this->enterList($node);
             } elseif ($node instanceof Node\Expr\ErrorSuppress) {
                 $this->report($node, 'ErrorSuppress');
+            } elseif ($node instanceof Node\Expr\Print_) {
+                $this->enterPrint($node);
             } elseif ($node instanceof Node\Expr\AssignRef) {
                 if ($node->expr instanceof Node\Expr\New_) {
                     $this->report($node, 'AssignRef/NEW');
@@ -300,25 +302,18 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             $this->report($node, 'List/EMPTY');
         }
     }
+    private function enterPrint(Node\Expr\Print_ $node)
+    {
+        $name = self::getUserInput($node->expr);
+        if ($name !== false) {
+        }
+    }
     private function enterEcho(Node\Stmt\Echo_ $node)
     {
-        static $superglobals = null;
-        if ($superglobals === null) {
-            $superglobals = array_flip([
-                '_SERVER', '_GET', '_POST', '_FILES', '_COOKIE', '_REQUEST',
-            ]);
-        }
         foreach ($node->exprs as $expr) {
-            if ($expr instanceof Node\Expr\ArrayDimFetch) {
-                while ($expr->var instanceof Node\Expr\ArrayDimFetch) {
-                    $expr = $expr->var;
-                }
-                if (($expr->var instanceof Node\Expr\Variable)
-                 && is_string($expr->var->name)
-                 && array_key_exists(strtoupper($expr->var->name), $superglobals)
-                ) {
-                    $this->report($node, 'Echo/USER_INPUT[$'.$expr->var->name.']');
-                }
+            $name = self::getUserInput($expr);
+            if ($name !== false) {
+                $this->report($node, 'Echo/USER_INPUT[$'.$name.']');
             }
         }
     }
@@ -473,6 +468,31 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 $this->report($cond, "Cond/WEAK_COMP_{$type}[$funcName]");
             }
         }
+    }
+    private static function getUserInput($node)
+    {
+        static $userinput = null;
+        if ($userinput === null) {
+            $userinput = array_flip([
+                '_GET', '_POST', '_COOKIE', '_REQUEST', '_FILES', '_SERVER',
+                'HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_COOKIE_VARS', 'HTTP_REQUEST_VARS',
+                'HTTP_POST_FILES', 'HTTP_SERVER_VARS', 'HTTP_RAW_POST_DATA',
+                'argc', 'argv',
+            ]);
+        }
+        if ($node instanceof Node\Expr\ArrayDimFetch) {
+            while ($node->var instanceof Node\Expr\ArrayDimFetch) {
+                $node = $node->var;
+            }
+            $node = $node->var;
+        }
+        if (($node instanceof Node\Expr\Variable)
+         && is_string($node->name)
+         && array_key_exists($node->name, $userinput)
+        ) {
+            return $node->name;
+        }
+        return false;
     }
     private static function getMixReturnFuncCall($node)
     {
