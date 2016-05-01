@@ -46,6 +46,12 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
 -   Variable/DEPRECATED_GLOBALS :bomb:
 
+-   ArrayDimFetch/Const :dash:
+
+    ~~~php
+    $value[key];
+    ~~~
+
 -   Equal/WEAK_COMP_NUM
 
     ~~~php

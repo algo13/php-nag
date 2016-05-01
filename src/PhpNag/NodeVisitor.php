@@ -60,6 +60,8 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         if ($node instanceof Node\Expr) {
             if ($node instanceof Node\Expr\Variable) {
                 $this->enterVariable($node);
+            } elseif ($node instanceof Node\Expr\ArrayDimFetch) {
+                $this->enterArrayDimFetch($node);
             } elseif ($node instanceof Node\Expr\BinaryOp) {
                 $this->enterBinaryOp($node);
             } elseif ($node instanceof Node\Expr\FuncCall) {
@@ -128,6 +130,15 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             $info = BuiltInUtils::getDeprecatedGlobals($name);
             if ($info !== false) {
                 $this->report($node, "Variable/DEPRECATED_GLOBALS[$name]");
+            }
+        }
+    }
+    private function enterArrayDimFetch(Node\Expr\ArrayDimFetch $node)
+    {
+        if ($node->dim instanceof Node\Expr\ConstFetch) {
+            $name = $node->dim->name->toString();
+            if ($name !== strtoupper($name)) {
+                $this->report($node, 'ArrayDimFetch/Const');
             }
         }
     }
