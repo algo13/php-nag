@@ -177,6 +177,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             case 'fopen':
             case 'srand':
             case 'mt_srand':
+            case 'strtr':
                 $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
                 break;
             case 'define':
