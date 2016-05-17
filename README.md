@@ -73,7 +73,7 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
 -   FuncCall/NON_BEGINNER_FUNC :beginner:
 
--   FuncCall/NON_OCT[chmod]
+-   FuncCall/NON_OCT\[chmod\]
 
     ~~~php
     chmod($filename, 755);
