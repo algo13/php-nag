@@ -11,7 +11,7 @@
   "require": {
     "php": ">=5.4",
     "ext-tokenizer": "*",
-    "nikic/php-parser": "~2.0"
+    "nikic/php-parser": "~2.1"
   },
   "bin": [
     "bin/phpnag"

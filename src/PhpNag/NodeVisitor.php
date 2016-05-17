@@ -180,6 +180,14 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             case 'strtr':
                 $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
                 break;
+            case 'chmod':
+                $mode = $node->args[1]->value;
+                if (!($mode instanceof Node\Scalar\LNumber)
+                 || ($mode->getAttribute('kind', Node\Scalar\LNumber::KIND_DEC) !== Node\Scalar\LNumber::KIND_OCT)
+                ) {
+                    $this->report($mode, "FuncCall/NON_OCT[$funcName]");
+                }
+                break;
             case 'define':
             case 'defined':
                 $name = $node->args[0]->value;
