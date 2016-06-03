@@ -2,6 +2,10 @@
 
 Static analysis tool for PHP source code by PHP.
 
+for running on PHP >= 5.4  
+for parsing PHP 5.2 to PHP 7.0  
+(Depend on the [PHP-Parser](https://github.com/nikic/PHP-Parser) version 2)
+
 ## Getting Started
 
 [Download phar](https://github.com/algo13/php-nag/releases)
