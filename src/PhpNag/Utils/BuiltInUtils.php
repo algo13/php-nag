@@ -130,7 +130,9 @@ final class BuiltInUtils
             'imagepsslantfont' => ['', '7.0.0', ''],
             'imagepstext' => ['', '7.0.0', ''],
             // Mathematical Extensions > Math > Math Functions
-            'rand' => ['', '', 'mt_rand', ''],
+            'getrandmax' => ['7.1', '8.0', 'mt_getrandmax'],
+            'rand' => ['7.1', '8.0', 'mt_rand'],
+            'srand' => ['7.1', '8.0', 'mt_srand'],
             // Other Basic Extensions > Streams > Stream Functions
             'set_socket_blocking' => ['5.3.0', '7.0.0', 'alias stream_set_blocking()'],
             // Session Extensions > Sessions > Session Functions
@@ -176,6 +178,7 @@ final class BuiltInUtils
             'mbstring.http_output' => array('5.6.0', null, 'default_charset'),
             'mbstring.internal_encoding' => array('5.6.0', null, 'default_charset'),
             'mbstring.script_encoding' => array(null, '5.4.0', 'zend.script_encoding'),
+            'mbstring.func_overload' => array(null, '7.1'),
             // Other Basic Extensions > Misc. > Installing/Configuring
             'highlight.bg' => array('5.3', '5.4'),
             // Other Services > Network > Installing/Configuring

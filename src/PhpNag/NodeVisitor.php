@@ -175,7 +175,6 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         $funcName = strtolower($funcName);
         switch ($funcName) {
             case 'fopen':
-            case 'srand':
             case 'mt_srand':
             case 'strtr':
                 $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
