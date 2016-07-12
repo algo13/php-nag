@@ -130,9 +130,9 @@ final class BuiltInUtils
             'imagepsslantfont' => ['', '7.0.0', ''],
             'imagepstext' => ['', '7.0.0', ''],
             // Mathematical Extensions > Math > Math Functions
-            'getrandmax' => ['7.1', '8.0', 'mt_getrandmax'],
-            'rand' => ['7.1', '8.0', 'mt_rand'],
-            'srand' => ['7.1', '8.0', 'mt_srand'],
+            'getrandmax' => ['7.1.0', '8.0.0', 'mt_getrandmax'],
+            'rand' => ['7.1.0', '8.0.0', 'mt_rand'],
+            'srand' => ['7.1.0', '8.0.0', 'mt_srand'],
             // Other Basic Extensions > Streams > Stream Functions
             'set_socket_blocking' => ['5.3.0', '7.0.0', 'alias stream_set_blocking()'],
             // Session Extensions > Sessions > Session Functions
@@ -151,8 +151,11 @@ final class BuiltInUtils
             // Text Processing > Strings > String Functions
             'crc32' => ['', '', 'deprecated(32bit/64bit)'],
             // Variable and Type Related Extensions > Classes/Objects > Classes/Object Functions
+            '__autoload' => ['7.1.0', '8.0.0', null],
             'call_user_method_array' => ['4.1.0', '7.0.0', 'call_user_func_array()'],
             'call_user_method' => ['4.1.0', '7.0.0', 'call_user_func()'],
+            // Variable and Type Related Extensions > Function Handling > Function handling Functions
+            'create_function' => ['7.1.0', '8.0.0', null],
             // Variable and Type Related Extensions > Variable handling > Variable handling Functions
             'import_request_variables' => ['5.3.0', '5.4.0', null], //< bug?
         ];
@@ -263,6 +266,7 @@ final class BuiltInUtils
             'HTTP_ENV_VARS' => ['4.1.0', null, '$_ENV'],
             'HTTP_COOKIE_VARS' => ['4.1.0', null, '$_COOKIE'],
             'HTTP_RAW_POST_DATA' => ['5.6.0', '7.0.0', 'php://input'],
+            'php_errormsg' => ['7.1.0', '8.0.0', 'error_get_last()'],
         ];
         if (array_key_exists($name, $cache)) {
             return $cache[$name];
