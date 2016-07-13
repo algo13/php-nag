@@ -77,7 +77,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                     $this->report($node, 'AssignRef/NEW');
                 }
             } elseif ($node instanceof Node\Expr\Cast\Unset_) {
-                $this->report($node, '(unset)$cast');
+                $this->report($node, 'Cast/UNSET');
             } else {
                 // TODO:
             }
