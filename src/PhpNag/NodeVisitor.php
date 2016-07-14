@@ -181,6 +181,30 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             case 'strtr':
                 $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
                 break;
+            case 'compact':
+                foreach ($node->args as $arg) {
+                    $name = self::getUserInput($arg->value);
+                    if ($name !== false) {
+                        $this->report($node, 'FuncCall/USER_INPUT[$'.$name.']');
+                    }
+                }
+                    $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
+                }
+                break;
+            case 'extract':
+                $name = self::getUserInput($node->args[0]->value);
+                if ($name !== false) {
+                    $this->report($node, 'FuncCall/USER_INPUT[$'.$name.']');
+                } else {
+                    $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
+                }
+                break;
+            case 'wddx_deserialize':
+                $name = self::getUserInput($node->args[0]->value);
+                if ($name !== false) {
+                    $this->report($node, 'FuncCall/USER_INPUT[$'.$name.']');
+                }
+                break;
             case 'chmod':
                 $mode = $node->args[1]->value;
                 if (!($mode instanceof Node\Scalar\LNumber)
