@@ -182,12 +182,15 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
                 break;
             case 'compact':
+                $name = false;
                 foreach ($node->args as $arg) {
                     $name = self::getUserInput($arg->value);
                     if ($name !== false) {
                         $this->report($node, 'FuncCall/USER_INPUT[$'.$name.']');
+                        break;
                     }
                 }
+                if ($name === false) {
                     $this->report($node, "FuncCall/NON_BEGINNER_FUNC[$funcName]");
                 }
                 break;
