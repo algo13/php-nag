@@ -500,8 +500,8 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             }
         } elseif ($cond instanceof Node\Expr\BooleanNot) {
             $this->enterCond($cond->expr, $type);
-        } elseif (($cond instanceof Expr\inaryOp\BooleanOr)
-         || ($cond instanceof Expr\inaryOp\BooleanAnd)
+        } elseif (($cond instanceof Node\Expr\BinaryOp\BooleanOr)
+         || ($cond instanceof Node\Expr\BinaryOp\BooleanAnd)
         ) {
             $this->enterCond($cond->left, $type);
             $this->enterCond($cond->right, $type);
