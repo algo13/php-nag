@@ -11,9 +11,11 @@ class Parser
         $this->traverser = new NodeTraverser();
         $this->traverser->addVisitor($this->visitor);
     }
-    public function parseFile($fileName)
+    public function parseFile($fileName, $contents = null)
     {
-        $contents = file_get_contents($fileName);
+        if (func_num_args() < 2) {
+            $contents = file_get_contents($fileName);
+        }
         if ($contents !== false) {
             $contents = $this->parser->parse($contents);
             //$this->visitor->setTokens($this->lexer->getTokens());
