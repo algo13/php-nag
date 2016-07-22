@@ -147,18 +147,26 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
     private function enterBinaryOp(Node\Expr\BinaryOp $node)
     {
         if ($node instanceof Node\Expr\BinaryOp\Equal || $node instanceof Node\Expr\BinaryOp\NotEqual) {
-            if (($node->left instanceof Node\Scalar\LNumber) || ($node->right instanceof Node\Scalar\LNumber)
-             || ($node->left instanceof Node\Scalar\DNumber) || ($node->right instanceof Node\Scalar\DNumber)
-            ) {
-                $this->report($node, 'Equal/WEAK_COMP_NUM');
-            }
-            $funcName = self::getMixReturnFuncCall($node->left);
-            if ($funcName !== false) {
-                $this->report($node->left, 'Equal/WEAK_COMP_FUNC['.$funcName.']');
-            }
-            $funcName = self::getMixReturnFuncCall($node->right);
-            if ($funcName !== false) {
-                $this->report($node->right, 'Equal/WEAK_COMP_FUNC['.$funcName.']');
+            foreach ([$node->left, $node->right] as $side) {
+                if (($side instanceof Node\Scalar\LNumber) || ($side instanceof Node\Scalar\DNumber)) {
+                    $this->report($node, 'Equal/WEAK_COMP_NUM');
+                    break;
+                } elseif ($side instanceof Node\Expr\ConstFetch) {
+                    $name = strtolower($side->name->toString());
+                    if ($name === 'null') {
+                        $this->report($node, 'Equal/WEAK_COMP_NULL');
+                        break;
+                    } elseif (($name === 'true') || ($name === 'false')) {
+                        $this->report($node, 'Equal/WEAK_COMP_BOOL');
+                        break;
+                    }
+                } else {
+                    $funcName = self::getMixReturnFuncCall($side);
+                    if ($funcName !== false) {
+                        $this->report($node, 'Equal/WEAK_COMP_FUNC['.$funcName.']');
+                        break;
+                    }
+                }
             }
         } elseif ($node instanceof Node\Expr\BinaryOp\LogicalAnd
          || $node instanceof Node\Expr\BinaryOp\LogicalOr
