@@ -1,5 +1,5 @@
 <?php
-define('PHPNAG_VERSIOIN', '0.0.1-bata1');
+define('PHPNAG_VERSIOIN', '0.0.1-bata2');
 if (file_exists(__DIR__.'../vendor/autoload.php')) {
     require __DIR__.'../vendor/autoload.php';
 } else {
