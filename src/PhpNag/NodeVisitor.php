@@ -346,9 +346,9 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
     private function enterList(Node\Expr\List_ $node)
     {
         $store = [];
-        foreach ($node->vars as $var) {
-            if ($var !== null) {
-                $pretty = $this->prettyPrinter->prettyPrint(array($var));
+        foreach ($node->items as $item) {
+            if ($item !== null) {
+                $pretty = $this->prettyPrinter->prettyPrint(array($item));
                 if (isset($store[$pretty])) {
                     $this->report($node, 'List/ASSIGN_ORDER');
                 } else {
@@ -398,7 +398,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                     $this->report($stmt, 'ClassLike/MIXED_ORDER[Method/Property]');
                 }
                 // public=0, protected=1, private=2
-                $visibility = (($stmt->type & Node\Stmt\Class_::VISIBILITY_MODIFER_MASK) >> 1);
+                $visibility = (($stmt->flags & Node\Stmt\Class_::VISIBILITY_MODIFER_MASK) >> 1);
                 if ($visibility !== $previous[$target]) {
                     $previous[$target] = $visibility;
                     $visibilities[$target][] = $visibility;
