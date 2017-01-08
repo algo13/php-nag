@@ -250,6 +250,8 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
                 }
                 break;
             case 'preg_replace':
+            case 'mb_ereg_replace':
+            case 'mb_eregi_replace':
                 static $pairs = array(
                     '(' => ')',
                     '[' => ']',
