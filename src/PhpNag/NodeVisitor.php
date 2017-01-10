@@ -8,7 +8,6 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
 {
     public function __construct()
     {
-        $this->prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         $this->fileName = '';
         $this->count = 0;
     }
@@ -348,11 +347,10 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         $store = [];
         foreach ($node->items as $item) {
             if ($item !== null) {
-                $pretty = $this->prettyPrinter->prettyPrint(array($item));
-                if (isset($store[$pretty])) {
+                if (in_array($item, $store, false)) {
                     $this->report($node, 'List/ASSIGN_ORDER');
                 } else {
-                    $store[$pretty] = true;
+                    $store[] = $item;
                 }
             }
         }
@@ -581,6 +579,5 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         return true;
     }
     private $fileName;
-    private $prettyPrinter;
     private $count;
 }

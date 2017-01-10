@@ -15,10 +15,12 @@
        "vendor/nikic/php-parser/lib/bootstrap.php",
        "vendor/nikic/php-parser/lib/PhpParser/Lexer/Emulative.php",
        "vendor/nikic/php-parser/lib/PhpParser/NodeVisitor/NameResolver.php",
+       "vendor/nikic/php-parser/lib/PhpParser/PrettyPrinter/Standard.php",
        "vendor/nikic/php-parser/lib/PhpParser/Serializer/XML.php",
        "vendor/nikic/php-parser/lib/PhpParser/Unserializer/XML.php",
        "vendor/nikic/php-parser/lib/PhpParser/Autoloader.php",
        "vendor/nikic/php-parser/lib/PhpParser/NodeDumper.php",
+       "vendor/nikic/php-parser/lib/PhpParser/PrettyPrinterAbstract.php",
        "vendor/nikic/php-parser/lib/PhpParser/Serializer.php",
        "vendor/nikic/php-parser/lib/PhpParser/Unserializer.php",
        "vendor/nikic/php-parser/lib/PhpParser/NodeTraverser.php"
