@@ -1,8 +1,8 @@
 <?php
 namespace PhpNag;
 
-use \PhpParser\Node;
-use \PhpNag\Utils\BuiltInUtils;
+use PhpParser\Node;
+use PhpNag\Utils\BuiltInUtils;
 
 class NodeVisitor extends \PhpParser\NodeVisitorAbstract
 {

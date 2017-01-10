@@ -1,7 +1,7 @@
 <?php
 namespace PhpNag;
 
-use \PhpParser\Comment;
+use PhpParser\Comment;
 
 class Lexer extends \PhpParser\Lexer
 {

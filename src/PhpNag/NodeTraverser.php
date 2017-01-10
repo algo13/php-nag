@@ -1,7 +1,7 @@
 <?php
 namespace PhpNag;
 
-use \PhpParser\Node;
+use PhpParser\Node;
 
 class NodeTraverser implements \PhpParser\NodeTraverserInterface
 {
