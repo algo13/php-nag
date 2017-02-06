@@ -98,7 +98,7 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             } elseif ($node instanceof Node\Stmt\For_) {
                 $this->enterLoop($node, 'FOR');
                 if (1 < count($node->cond)) {
-                    $this->report($node, 'For/MULTIPLE_COND');
+                    $this->report($node, 'For/COND_MULTIPLE');
                 }
             } elseif ($node instanceof Node\Stmt\While_) {
                 $this->enterLoop($node, 'WHILE');

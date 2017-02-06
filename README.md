@@ -18,7 +18,7 @@ php -d "memory_limit=512M" phpnag.phar file.php
 
 ## Summary
 
--   For/MULTIPLE_COND
+-   For/COND_MULTIPLE
 
     ~~~php
     for (;$a < 2, $b < 3;) {}
