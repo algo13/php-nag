@@ -68,15 +68,13 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             } elseif ($node instanceof Node\Expr\List_) {
                 $this->enterList($node);
             } elseif ($node instanceof Node\Expr\ErrorSuppress) {
-                $this->report($node, 'ErrorSuppress');
+                $this->enterErrorSuppress($node);
             } elseif ($node instanceof Node\Expr\Print_) {
                 $this->enterPrint($node);
             } elseif ($node instanceof Node\Expr\AssignRef) {
-                if ($node->expr instanceof Node\Expr\New_) {
-                    $this->report($node, 'AssignRef/NEW');
-                }
+                $this->enterAssignRef($node);
             } elseif ($node instanceof Node\Expr\Cast\Unset_) {
-                $this->report($node, 'Cast/UNSET');
+                $this->enterCastUnset($node);
             } else {
                 // TODO:
             }
@@ -89,31 +87,23 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             } elseif ($node instanceof Node\Stmt\ClassLike) {
                 $this->enterClassLike($node);
             } elseif ($node instanceof Node\Stmt\If_) {
-                $this->enterCond($node->cond, 'IF');
-                //if (!empty($node->elseifs) && ($node->else === null)) {
-                //    $this->report($node, 'If/INCOMPLETE_ELSEIF');
-                //}
+                $this->enterIf($node);
             } elseif ($node instanceof Node\Stmt\ElseIf_) {
-                $this->enterCond($node->cond, 'ELSEIF');
+                $this->enterElseIf($node);
             } elseif ($node instanceof Node\Stmt\For_) {
-                $this->enterLoop($node, 'FOR');
-                if (1 < count($node->cond)) {
-                    $this->report($node, 'For/COND_MULTIPLE');
-                }
+                $this->enterFor($node);
             } elseif ($node instanceof Node\Stmt\While_) {
-                $this->enterLoop($node, 'WHILE');
+                $this->enterWhile($node);
             } elseif ($node instanceof Node\Stmt\Do_) {
-                $this->enterLoop($node, 'DO');
+                $this->enterDo($node);
             } elseif ($node instanceof Node\Stmt\Unset_) {
                 $this->enterUnset($node);
             } elseif ($node instanceof Node\Stmt\Switch_) {
                 $this->enterSwitch($node);
             } elseif ($node instanceof Node\Stmt\Catch_) {
-                if (empty($node->stmts)) {
-                    $this->report($node, 'Catch/EMPTY');
-                }
+                $this->enterCatch($node);
             } elseif ($node instanceof Node\Stmt\Goto_) {
-                $this->report($node, 'Goto');
+                $this->enterGoto($node);
             } else {
                 // TODO:
             }
@@ -124,6 +114,56 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
         } else {
             // TODO:
         }
+    }
+    private function enterErrorSuppress(Node\Expr\ErrorSuppress $node)
+    {
+        $this->report($node, 'ErrorSuppress');
+    }
+    private function enterAssignRef(Node\Expr\AssignRef $node)
+    {
+        if ($node->expr instanceof Node\Expr\New_) {
+            $this->report($node, 'AssignRef/NEW');
+        }
+    }
+    private function enterCastUnset(Node\Expr\Cast\Unset_ $node)
+    {
+        $this->report($node, 'Cast/UNSET');
+    }
+    private function enterIf(Node\Stmt\If_ $node)
+    {
+        $this->enterCond($node->cond, 'IF');
+        //if (!empty($node->elseifs) && ($node->else === null)) {
+        //    $this->report($node, 'If/INCOMPLETE_ELSEIF');
+        //}
+    }
+    private function enterElseIf(Node\Stmt\ElseIf_ $node)
+    {
+        $this->enterCond($node->cond, 'ELSEIF');
+    }
+    private function enterFor(Node\Stmt\For_ $node)
+    {
+        $this->enterLoop($node, 'FOR');
+        if (1 < count($node->cond)) {
+            $this->report($node, 'For/COND_MULTIPLE');
+        }
+    }
+    private function enterWhile(Node\Stmt\While_ $node)
+    {
+        $this->enterLoop($node, 'WHILE');
+    }
+    private function enterDo(Node\Stmt\Do_ $node)
+    {
+        $this->enterLoop($node, 'DO');
+    }
+    private function enterCatch(Node\Stmt\Catch_ $node)
+    {
+        if (empty($node->stmts)) {
+            $this->report($node, 'Catch/EMPTY');
+        }
+    }
+    private function enterGoto(Node\Stmt\Goto_ $node)
+    {
+        $this->report($node, 'Goto');
     }
     private function enterVariable(Node\Expr\Variable $node)
     {
