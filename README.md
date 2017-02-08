@@ -16,6 +16,18 @@ for parsing PHP 5.2 to PHP 7.1
 php -d "memory_limit=512M" phpnag.phar file.php
 ~~~
 
+Windows:
+
+~~~sh
+> php phpnag.phar src | findstr /V "ORDER DEFAULT_NOTHING"
+~~~
+
+Linux:
+
+~~~sh
+$ php phpnag.phar src | grep -v 'ORDER|DEFAULT_NOTHING'
+~~~
+
 ## Summary
 
 -   For/COND_MULTIPLE
