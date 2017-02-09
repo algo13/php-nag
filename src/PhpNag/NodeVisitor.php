@@ -48,71 +48,26 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
     }
     public function enterNode(Node $node)
     {
-        // TODO:
-        /*
-        $method = 'enter'.str_replace(['Expr_', 'Stmt_'], '', $node->getType());
-        if (method_exists($this, $method)) {
-            $this->$method($node);
-        }
-        return;
-        */
-        if ($node instanceof Node\Expr) {
-            if ($node instanceof Node\Expr\Variable) {
-                $this->enterVariable($node);
-            } elseif ($node instanceof Node\Expr\ArrayDimFetch) {
-                $this->enterArrayDimFetch($node);
-            } elseif ($node instanceof Node\Expr\BinaryOp) {
-                $this->enterBinaryOp($node);
-            } elseif ($node instanceof Node\Expr\FuncCall) {
-                $this->enterFuncCall($node);
-            } elseif ($node instanceof Node\Expr\List_) {
-                $this->enterList($node);
-            } elseif ($node instanceof Node\Expr\ErrorSuppress) {
-                $this->enterErrorSuppress($node);
-            } elseif ($node instanceof Node\Expr\Print_) {
-                $this->enterPrint($node);
-            } elseif ($node instanceof Node\Expr\AssignRef) {
-                $this->enterAssignRef($node);
-            } elseif ($node instanceof Node\Expr\Cast\Unset_) {
-                $this->enterCastUnset($node);
-            } else {
-                // TODO:
+        static $cache = [];
+        $name = get_class($node);
+        if (!isset($cache[$name])) {
+            $cache[$name] = [];
+            //$method = 'enter'.str_replace(['Expr_', 'Stmt_', '_'], '', $node->getType());
+            $method = 'enter'.str_replace(['Expr\\', 'Stmt\\', '\\'], '', substr(rtrim($name, '_'), 15));
+            //if (method_exists($this, $method)) {
+            if (is_callable([$this, $method])) {
+                $cache[$name][] = $method;
             }
-        //} elseif ($node instanceof Node\Scalar) {
-        //} elseif ($node instanceof Node\Arg) {
-        //} elseif ($node instanceof Node\Name) {
-        } elseif ($node instanceof Node\Stmt) {
-            if ($node instanceof Node\Stmt\Echo_) {
-                $this->enterEcho($node);
+            if ($node instanceof Node\Expr\BinaryOp) {
+                $cache[$name][] = 'enterBinaryOp';
+            } elseif ($node instanceof Node\FunctionLike) {
+                $cache[$name][] = 'enterFunctionLike';
             } elseif ($node instanceof Node\Stmt\ClassLike) {
-                $this->enterClassLike($node);
-            } elseif ($node instanceof Node\Stmt\If_) {
-                $this->enterIf($node);
-            } elseif ($node instanceof Node\Stmt\ElseIf_) {
-                $this->enterElseIf($node);
-            } elseif ($node instanceof Node\Stmt\For_) {
-                $this->enterFor($node);
-            } elseif ($node instanceof Node\Stmt\While_) {
-                $this->enterWhile($node);
-            } elseif ($node instanceof Node\Stmt\Do_) {
-                $this->enterDo($node);
-            } elseif ($node instanceof Node\Stmt\Unset_) {
-                $this->enterUnset($node);
-            } elseif ($node instanceof Node\Stmt\Switch_) {
-                $this->enterSwitch($node);
-            } elseif ($node instanceof Node\Stmt\Catch_) {
-                $this->enterCatch($node);
-            } elseif ($node instanceof Node\Stmt\Goto_) {
-                $this->enterGoto($node);
-            } else {
-                // TODO:
+                $cache[$name][] = 'enterClassLike';
             }
-        } elseif ($node instanceof Node\FunctionLike) {
-            $this->enterFunctionLike($node);
-        //} elseif ($node instanceof Node\Param) {
-        //} elseif ($node instanceof Node\Const_) {
-        } else {
-            // TODO:
+        }
+        foreach ($cache[$name] as $method) {
+            $this->$method($node);
         }
     }
     private function enterErrorSuppress(Node\Expr\ErrorSuppress $node)
