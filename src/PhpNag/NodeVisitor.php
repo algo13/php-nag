@@ -372,6 +372,12 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             }
         }
     }
+    private function enterProperty(Node\Stmt\Property $node)
+    {
+        if (1 < count($node->props)) {
+            $this->report($node, 'Property/MULTIPLE');
+        }
+    }
     // PSR-2: (abstract|final)?\s+(public|protected|private)\s+(static)?\s+function\s+(?<funcName>.*)\((?<param>.*)\) {}
     private function enterClassLike(Node\Stmt\ClassLike $node)
     {

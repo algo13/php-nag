@@ -30,6 +30,15 @@ $ php phpnag.phar src | grep -v 'ORDER|DEFAULT_NOTHING'
 
 ## Summary
 
+-   Property/MULTIPLE
+
+    ~~~php
+    class C
+    {
+        public $a, $b;
+    }
+    ~~~
+
 -   For/COND_MULTIPLE
 
     ~~~php
