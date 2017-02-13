@@ -451,32 +451,30 @@ class NodeVisitor extends \PhpParser\NodeVisitorAbstract
             } else {
                 $this->enterCond($case->cond, 'CASE');
             }
-            if ($fallThrough !== null) {
-                $isIntention = false;
-                foreach ((array)$case->getAttribute('comments') as $value) {
-                    if (preg_match('/FALL[ -]?THROUGH|No break/i', $value->getText()) === 1) {
-                        $isIntention = true;
-                        break;
-                    }
-                }
-                if ($isIntention === false) {
-                    $this->report($fallThrough, 'Switch/FALL_THROUGH');
-                }
-                $fallThrough = null;
-            }
             $stmtsCount = count($case->stmts);
             if (0 < $stmtsCount) {
-                $last = $case->stmts[$stmtsCount - 1];
-                if ($last instanceof Node\Stmt\Continue_) {
-                    if ($last->num === null || $last->num->value === 1) {
-                        $this->report($case, 'Switch/CONTINUE_BREAK');
+                do {
+                    $stmt = $case->stmts[--$stmtsCount];
+                    if ($stmt instanceof Node\Stmt\Break_ || $stmt instanceof Node\Stmt\Return_
+                     || $stmt instanceof Node\Stmt\Throw_ || $stmt instanceof Node\Stmt\Continue_
+                    ) {
+                        if ($stmt instanceof Node\Stmt\Continue_) {
+                            if ($stmt->num === null || $stmt->num->value === 1) {
+                                $this->report($case, 'Switch/CONTINUE_BREAK');
+                            }
+                        }
+                        break;
+                    } elseif ($stmt instanceof Node\Stmt\Nop) {
+                        foreach ((array)$stmt->getAttribute('comments') as $value) {
+                            // Intention comment
+                            if (preg_match('/FALL[ -]?THROUGH|No break/i', $value->getText()) === 1) {
+                                break 2;
+                            }
+                        }
+                    } else {
+                        $this->report($stmt, 'Switch/FALL_THROUGH');
                     }
-                } elseif (!(($last instanceof Node\Stmt\Break_)
-                 || ($last instanceof Node\Stmt\Return_)
-                 || ($last instanceof Node\Stmt\Throw_)
-                )) {
-                    $fallThrough = $case;
-                }
+                } while ($stmtsCount !== 0);
             }
         }
         if ($defaultCaseCount === 0) {
