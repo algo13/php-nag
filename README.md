@@ -39,6 +39,15 @@ $ php phpnag.phar src | grep -v 'ORDER|DEFAULT_NOTHING'
     }
     ~~~
 
+-   ClassConst/MULTIPLE
+
+    ~~~php
+    class C
+    {
+        const A = 1, B = 2;
+    }
+    ~~~
+
 -   For/COND_MULTIPLE
 
     ~~~php
